@@ -4,7 +4,14 @@
 
 export const environment = {
   production: false,
-  baseUrl: 'http://localhost:8080/'
+  baseUrl: 'http://localhost:8080/',
+  getPwd: 'login/getPassword/',
+  signIn:'login/authenticate/',
+  signUp: 'login/add',
+  addComment: 'comment/add',
+  allComments: 'comment/getAllComments',
+  getComments: 'comment/get/'
+
 };
 
 /*

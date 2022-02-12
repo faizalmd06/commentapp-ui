@@ -1,29 +1,28 @@
 
 <form *ngIf="showLoginPage">
 
-  <div class="card" style="width:50%; height: 50%; margin:auto;"  >
+  <div class="card" style="width:30%; height: 50%; margin:auto; margin-top: 10%;"  >
     <h4 class=" text-center">Sign In</h4>
-    <label class=" text-center">Don't have account?<a class="text-underlined" (click)="signupPage()">sign up</a></label>
-    <form class="form-group" [formGroup]="signInUserFormGroup">
+    <small class=" text-center">Don't have account?<a class="text-underlined" (click)="signupPage()">sign up</a></small>
+    <form  [formGroup]="signInUserFormGroup">
       <div class="form-group">
-        <label class="form-control text-left">
-       Email Id
-     </label>
-       <input type="text" formControlName="emailId" class="form-control">
- 
+        <label class="form-label text-left">
+             Email Id
+        </label>
+        <input type="email" formControlName="emailId" class="form-control">
       </div>
        <div class="form-group">
          <label class="form-label text-left">Password</label>
          <input type="text" formControlName="password" class="form-control">
        </div>
        <div align="end">
-         <label>Forget password?<a (click)="forgetPwdPage()"class="text-underlined">click here</a></label>
+         <small><a (click)="forgetPwdPage()"class="text-underlined">Forget password?</a></small>
        </div>
     </form>
-    <label *ngIf="signPageError" class="text-danger">Provide Email Id and Password</label>
-    <label *ngIf="unAuthorizedUser" class="text-danger">Invalid Email Id or Password</label>
+    <small *ngIf="signPageError" class="text-danger">Provide Email Id and Password</small>
+    <small *ngIf="unAuthorizedUser" class="text-danger">Invalid Email Id or Password</small>
     <div align=center>
-     <button class="btn-primary w-25 " (click)="signIn()">
+     <button class="btn-primary w-auto " (click)="signIn()">
        Sign In
     </button>
     </div>
@@ -33,16 +32,15 @@
 
 
 <form  *ngIf="showSignUpForgetPage">
-  <div class="card" style="width:50%; height: 50%; margin:auto;"  >
+  <div class="card" style="width:30%; height: 50%; margin:auto; margin-top:10%"  >
     <h4 class=" text-center">Sign Up</h4>
-    <!-- <label class=" text-center">Don't have account?<a class="text-underlined">sign up</a></label> -->
+    <small class=" text-center">Already have account?<a class="text-underlined" (click)="backToLogin()">sign in</a></small>
     <form class="form-group" [formGroup]="addUserFormGroup">
       <div class="form-group">
-        <label class="form-control text-left">
-       Email Id
-     </label>
-       <input type="text" class="form-control" formControlName="emailId">
-  
+        <label class="form-label text-left">
+           Email Id
+        </label>
+       <input type="email" class="form-control" formControlName="emailId">
       </div>
        <div class="form-group">
          <label class="form-label text-left">Password</label>
@@ -53,28 +51,25 @@
          <input type="text" class="form-control" formControlName="secreteCode">
        </div>
     </form>
-    <label *ngIf="invalidSignUp" class="text-danger">Please provide all the details in proper format</label>
-    <label [ngClass]="{'text-danger': errorsignup, 'text-success':signupsuccess}" *ngIf="signupsuccess || errorsignup">{{signUpstatus}}</label>
+    <small *ngIf="invalidSignUp" class="text-danger">Please provide all the details in proper format</small>
+    <small [ngClass]="{'text-danger': errorsignup, 'text-success':signupsuccess}" *ngIf="signupsuccess || errorsignup">{{signUpstatus}}</small>
     <div align=center>
      <button class="btn-primary w-25 " (click)="saveUser()">
        Sign Up
     </button>
     <div>
-      <label>Sign up  will add new user  </label>
-       <a class="text-underlined" (click)="backToLogin()">Back to login page.</a>
+      <small>By clicking "Sign up" you are creating an account. and you agree to Terms of Use.  <a class="text-underlined" (click)="backToLogin()">back to login page.</a> </small>
     </div>
     </div>
-    
   </div>
 </form>
 
-
 <form *ngIf="showPwdForgetPage">
-  <div class="card" style="width:50%; height: 50%; margin:auto;" >
+  <div class="card" style="width:30%; height: 50%; margin:auto; margin-top: 10%;" >
     <h4 class=" text-center">Forget Password</h4>
-    <form class="form-group"  [formGroup]="forgetPasswordFormGroup" >
+    <form  [formGroup]="forgetPasswordFormGroup" >
       <div class="form-group">
-        <label class="form-control text-left">
+        <label class="form-label  text-left">
        Email Id
      </label>
        <input type="text" class="form-control" formControlName="emailId">
@@ -84,13 +79,14 @@
          <input type="text" class="form-control" formControlName="secreteCode">
        </div>
        <div class="form-group">
-        <label class="text-sucess" *ngIf="passwordStatus != '' && !errorPwd">your password is {{passwordStatus.entity[0].password}}</label>
-        <label class="text-danger" *ngIf="passwordStatus != '' && errorPwd">{{passwordStatus.message}}</label>
+        <small class="text-danger" *ngIf="forgetPwdInvalid">provide all details</small>
+        <small class="text-success" *ngIf="passwordStatus != '' && !errorPwd">your password is {{passwordStatus.entity[0].password}}</small>
+        <small class="text-danger" *ngIf="passwordStatus != '' && errorPwd">{{passwordStatus.message}}</small>
       </div>
       
     </form>
     <div align=center>
-     <button class="btn-primary w-25 " (click)="getPassword()">
+     <button class="btn-primary w-auto " (click)="getPassword()">
        Get Password
     </button>
     </div>
@@ -98,11 +94,10 @@
 </form>
 
 <form  *ngIf="showCommentPage">
-  <div class="card" style="width:90%; height: 80%; margin:auto;"  >
+  <div class="card" style="width:90%; height: 80%; margin:auto;margin-top: 10%;"  >
     <label>What would you like to share with the world</label>
     <div class="d-flex flex-row" [formGroup]="addCommentFormGroup">
-      <textarea type="text" style="width:60%; height: 70%" formControlName = "comment">
-  
+      <textarea type="text" style="width:100%; height: 100%" formControlName = "comment">
       </textarea>
       <span>
         <button class="btn-primary btn-sm" (click)="saveComment()">
@@ -110,38 +105,44 @@
         </button>
       </span>
     </div>
+    <div *ngIf="commentError">
+      <small class="text-danger">Provide comment to save</small>
+   </div>
   </div>
-  <div *ngIf="commentError">
-     <label class="text-danger">Provide comment to save</label>
-  </div>
-  <div class="card" style="width:90%; height: 80%; margin:auto;">
+  
+  <div class="card" style="width:90%; height: 80%; margin:auto; margin-top: 2%;">
     <div class="d-flex flex-row">
-      <label class="col">Comments</label>
-      <span class="col"
-      >
+      <label class="col text-primary">Comments</label>
+      <span class="col">
         <button class="btn-primary btn-sm" (click)="filter()">Filter</button>
       </span>
     </div>
     
    <div class="d-flex flex-row" *ngIf="nocommentsAvailable; else available">
-    <label class="text-danger">No Comments available</label>
+    <small class="text-danger">No Comments available</small>
    </div>
-   <ng-template #available>
-    <div class="d-flex flex-row" *ngFor="let data of allComments.entity">
-      <label class="col">{{data.emailId}}</label>
-      <div class="col">{{data.comment}}</div>
+   <ng-template #available >
+    <div  style="max-height: 100px ;overflow-y: scroll;" >
+      <ng-container *ngFor="let data of allComments.entity" >
+        <div class="d-flex flex-row">
+          <label class="col">{{data.emailId}}</label>
+          <div class="col">{{data.comment}}</div>
+        </div>
+      </ng-container>
+      
      </div>
    </ng-template>
-   <div align=center>
-    <button class="btn-danger w-25 " (click)="getPassword()">
+   
+   <div *ngIf="commentSuccess">
+    <small class="text-success">Comment added successfully!!</small>
+  </div>
+  <div *ngIf="commentMsgError">
+    <small class="text-danger">Error while adding</small>
+  </div>
+  </div>
+  <div align=center style="margin-top: 5%;">
+    <button class="btn-danger w-auto " (click)="logout()">
       Logout
    </button>
    </div>
-   <div *ngIf="commentSuccess">
-    <label class="text-success">Comment added successfully!!</label>
-  </div>
-  <div *ngIf="commentMsgError">
-    <label class="text-danger">Error while adding</label>
-  </div>
-  </div>
 </form>

@@ -1,8 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import {map} from 'rxjs/operators';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-login',
@@ -34,7 +36,8 @@ export class LoginComponent {
   nocommentsAvailable: boolean = true;
   commentSuccess:boolean = false;
   commentMsgError:boolean = false;
-  constructor(private httpClient: HttpClient, private fb :FormBuilder){
+  forgetPwdInvalid: boolean = false;
+  constructor(private httpClient: HttpClient, private fb :FormBuilder, private route: Router){
     this.signInUserFormGroup = this.fb.group({
       emailId : ['',Validators.required],
       password: ['',Validators.required]
@@ -54,33 +57,43 @@ export class LoginComponent {
     })
   }
   backToLogin(){
+    this.forgetPwdInvalid = false;
+    this.invalidSignUp = false;
     this.showSignUpForgetPage = false;
     this.showLoginPage = true;
+    this.errorsignup = false;
+    this.signupsuccess = false;
+    this.signPageError = false;
+    this.unAuthorizedUser = false;
+    this.passwordStatus = false;
+    this.forgetPasswordFormGroup.patchValue({
+      emailId : "",
+      secreteCode: "",
+    });
+    this.addUserFormGroup.patchValue({
+      emailId : '',
+      password: '',
+      secreteCode: '',
+    });
+
   }
   getPassword(){
     if(this.forgetPasswordFormGroup.invalid){
+      this.forgetPwdInvalid = true;
       return;
     }
     this.passwordStatus = "";
     let emailId = this.forgetPasswordFormGroup.value.emailId
     let secreteCode = this.forgetPasswordFormGroup.value.secreteCode
-    this.httpClient.get("http://localhost:8080/login/getPassword/"+emailId+"/"+secreteCode).subscribe(result => {
+    this.httpClient.get(environment.baseUrl+environment.getPwd+emailId+"/"+secreteCode).subscribe(result => {
       this.passwordStatus = result;
       if(this.passwordStatus.statuscode == "OK"){
         this.errorPwd = false
       }else{
         this.errorPwd = true
       }
-      console.log(result);
     });
   }
-  get(){
-   
-    this.httpClient.get("http://localhost:8080/login/getAllUsers").subscribe(result => {
-      
-    });
-  }
-
   signIn(){
     if(this.signInUserFormGroup.invalid){
       this.signPageError = true;
@@ -89,7 +102,7 @@ export class LoginComponent {
     this.signPageError = false;
     let emailId = this.signInUserFormGroup.value.emailId;
     let pwd = this.signInUserFormGroup.value.password;
-    this.httpClient.get("http://localhost:8080/login/authenticate/"+emailId+"/"+pwd).pipe(map(e=>e)).subscribe(result => {
+    this.httpClient.get(environment.baseUrl+environment.signIn+emailId+"/"+pwd).pipe(map(e=>e)).subscribe(result => {
         this.signedUser = result
         if(this.signedUser.statuscode == "OK"){
           this.showCommentPage = true;
@@ -103,6 +116,10 @@ export class LoginComponent {
   signupPage(){
     this.showLoginPage = false;
     this.showSignUpForgetPage = true;
+    this.signInUserFormGroup.patchValue({
+      emailId : '',
+      password: ''
+    })
   }
   saveUser(){
     if(this.addUserFormGroup.invalid){
@@ -118,11 +135,16 @@ export class LoginComponent {
       secreteCode: this.addUserFormGroup.value.secreteCode
       
     }
-    this.httpClient.post("http://localhost:8080/login/add",obj).subscribe(obj => {
+    this.httpClient.post(environment.baseUrl+environment.signUp,obj).subscribe(obj => {
       this.addUser = obj;
       if(this.addUser.statuscode == "OK"){
         this.signUpstatus = this.addUser.message;
         this.signupsuccess = true;
+        this.addUserFormGroup.patchValue({
+          emailId : '',
+          password: '',
+          secreteCode: '',
+        });
       }else{
         this.signUpstatus = this.addUser.message;
         this.errorsignup = true;
@@ -139,7 +161,7 @@ export class LoginComponent {
       emailId:this.signedUser.entity[0].emailId,
       comment:this.addCommentFormGroup.value.comment
     }
-    this.httpClient.post("http://localhost:8080/comment/add",obj).subscribe(obj => {
+    this.httpClient.post(environment.baseUrl+environment.addComment,obj).subscribe(obj => {
       this.addUser = obj;
       if(this.addUser.statuscode == "OK"){
         this.commentSuccess = true;
@@ -155,7 +177,11 @@ export class LoginComponent {
   }
 
   getAllComments(){
-    this.httpClient.get("http://localhost:8080/comment/getAllComments").subscribe(result => {
+    this.signInUserFormGroup.patchValue({
+      emailId : '',
+      password: ''
+    })
+    this.httpClient.get(environment.baseUrl+environment.allComments).subscribe(result => {
       this.allComments = result;
       if(this.allComments.statuscode == "OK"){
          this.nocommentsAvailable = false
@@ -163,7 +189,9 @@ export class LoginComponent {
     });
   }
   filter(){
-    this.httpClient.get("http://localhost:8080/comment/get/"+this.signedUser.entity[0].emailId).subscribe(result => {
+    this.commentSuccess = false;
+    this.commentMsgError = false;
+    this.httpClient.get(environment.baseUrl+environment.getComments+this.signedUser.entity[0].emailId).subscribe(result => {
       this.allComments = result;
       if(this.allComments.statuscode == "OK"){
          this.nocommentsAvailable = false
@@ -178,5 +206,26 @@ export class LoginComponent {
     this.addCommentFormGroup.patchValue({
       comment: ''
     })
+  }
+  logout(){
+    this.showLoginPage  = true;
+    this.showPwdForgetPage  = false;
+    this.showSignUpForgetPage  = false;
+    this.showCommentPage  = false;
+    this.signPageError  = false;
+    this.unAuthorizedUser = false;
+    this.invalidSignUp = false;
+    this.errorsignup = false;
+    this.signupsuccess = false;
+    this. signedUser = ""
+    this. addUser = ""
+    this.signUpstatus= '';
+    this.errorPwd = false;
+    this.passwordStatus = ''
+    this.commentError  =false;
+    this.allComments = ''
+    this.nocommentsAvailable  = true;
+    this.commentSuccess = false;
+    this.commentMsgError = false;
   }
 }
