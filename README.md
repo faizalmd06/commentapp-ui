@@ -1,4 +1,4 @@
-Clone the Comment folder in your local machine.
+Clone the Comment app ui folder which is built on Angular framework  in your local machine.
 
 import the project folder in VScode.
 
